@@ -4,7 +4,14 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { toast } from "sonner";
 import { Flame } from "lucide-react";
 
@@ -17,14 +24,15 @@ export default function Register() {
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
+
     if (password.length < 6) {
       toast.error("Password must be at least 6 characters");
       return;
     }
+
     setLoading(true);
 
-    // Step 1: Sign up
-    const { error: signUpError } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
@@ -32,27 +40,22 @@ export default function Register() {
       },
     });
 
-    if (signUpError) {
+    if (error) {
       setLoading(false);
-      toast.error(signUpError.message);
+      toast.error(error.message);
       return;
     }
 
-    // Step 2: Auto sign in immediately after register
-    const { error: signInError } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-
-    setLoading(false);
-
-    if (signInError) {
-      toast.success("Account created! Please sign in.");
-      navigate("/login");
-    } else {
+    if (data.session) {
+      setLoading(false);
       toast.success("Welcome! Account created successfully.");
       navigate("/dashboard");
+      return;
     }
+
+    setLoading(false);
+    toast.success("Account created! Please verify your email then sign in.");
+    navigate("/login");
   };
 
   return (
@@ -93,7 +96,7 @@ export default function Register() {
               <Input
                 id="password"
                 type="password"
-                placeholder="••••••••"
+                placeholder="Min. 6 characters"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
@@ -106,7 +109,10 @@ export default function Register() {
             </Button>
             <p className="text-sm text-muted-foreground">
               Already have an account?{" "}
-              <Link to="/login" className="text-primary hover:underline font-medium">
+              <Link
+                to="/login"
+                className="text-primary hover:underline font-medium"
+              >
                 Sign In
               </Link>
             </p>
