@@ -40,6 +40,11 @@
 <br/>
 
 </div>
+## 🎬 Demo Video
+
+[Watch Demo](https://github.com/RevanthGaraga7/LPG-Tracker-project/blob/main/docs/Smart%20LPG%20Booking%20System%20-%20Demo.mp4)
+
+Live Demo: https://deft-macaron-114a39.netlify.app/
 
 ---
 
