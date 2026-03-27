@@ -15,17 +15,33 @@ export default function Login() {
   const navigate = useNavigate();
 
   const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
-    setLoading(false);
-    if (error) {
-      toast.error(error.message);
+  e.preventDefault();
+  setLoading(true);
+
+  const { error } = await supabase.auth.signInWithPassword({ email, password });
+  setLoading(false);
+
+  if (error) {
+    if (error.message.toLowerCase().includes("invalid login credentials") ||
+        error.message.toLowerCase().includes("invalid_grant") ||
+        error.message.toLowerCase().includes("invalid")) {
+      toast.error("No account found. Please register first.", {
+        action: {
+          label: "Register now",
+          onClick: () => navigate("/register"),
+        },
+      });
+    } else if (error.message.toLowerCase().includes("email not confirmed")) {
+      toast.error("Please confirm your email before signing in. Check your inbox.");
     } else {
-      toast.success("Logged in successfully!");
-      navigate("/");
+      toast.error(error.message);
     }
-  };
+    return;
+  }
+
+  toast.success("Logged in successfully!");
+  navigate("/dashboard");
+};
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background px-4">

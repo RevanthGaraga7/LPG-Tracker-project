@@ -47,12 +47,7 @@ export default function Register() {
       return;
     }
 
-    if (data.session) {
-      setLoading(false);
-      toast.success("Welcome! Account created successfully.");
-      navigate("/dashboard");
-      return;
-    }
+    
 
     setLoading(false);
     toast.success("Account created! Please verify your email then sign in.");
