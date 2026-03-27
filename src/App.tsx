@@ -45,6 +45,7 @@ const App = () => (
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/" element={<ProtectedRoute><RoleDashboard /></ProtectedRoute>} />
+          <Route path="/dashboard" element={<ProtectedRoute><RoleDashboard /></ProtectedRoute>} />
           <Route path="/book" element={<ProtectedRoute allowedRoles={["customer"]}><BookCylinder /></ProtectedRoute>} />
           <Route path="/orders" element={<ProtectedRoute allowedRoles={["customer"]}><CustomerOrders /></ProtectedRoute>} />
           <Route path="/track" element={<ProtectedRoute allowedRoles={["customer"]}><TrackOrder /></ProtectedRoute>} />
